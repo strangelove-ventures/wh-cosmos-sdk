@@ -175,11 +175,7 @@ func (k msgServer) EditValidator(goCtx context.Context, msg *types.MsgEditValida
 			return nil, types.ErrMinSelfDelegationDecreased
 		}
 
-		if msg.MinSelfDelegation.GT(validator.Tokens) {
-			return nil, types.ErrSelfDelegationBelowMinimum
-		}
-
-		validator.MinSelfDelegation = *msg.MinSelfDelegation
+		validator.MinSelfDelegation = (*msg.MinSelfDelegation)
 	}
 
 	k.SetValidator(ctx, validator)
