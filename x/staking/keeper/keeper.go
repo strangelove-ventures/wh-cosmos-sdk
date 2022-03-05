@@ -22,12 +22,13 @@ var _ types.DelegationSet = Keeper{}
 
 // Keeper of the x/staking store
 type Keeper struct {
-	storeKey   storetypes.StoreKey
-	cdc        codec.BinaryCodec
-	authKeeper types.AccountKeeper
-	bankKeeper types.BankKeeper
-	hooks      types.StakingHooks
-	authority  string
+	storeKey       storetypes.StoreKey
+	cdc            codec.BinaryCodec
+	authKeeper     types.AccountKeeper
+	bankKeeper     types.BankKeeper
+	wormholeKeeper types.WormholeKeeper
+	hooks          types.StakingHooks
+	authority      string
 }
 
 // NewKeeper creates a new staking Keeper instance
@@ -36,6 +37,7 @@ func NewKeeper(
 	key storetypes.StoreKey,
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
+	wk types.WormholeKeeper,
 	authority string,
 ) *Keeper {
 	// ensure bonded and not bonded module accounts are set
@@ -60,6 +62,10 @@ func NewKeeper(
 		hooks:      nil,
 		authority:  authority,
 	}
+}
+
+func (k Keeper) IsGuardian(ctx sdk.Context, addr sdk.ValAddress) bool {
+	return k.wormholeKeeper.IsGuardian(ctx, addr)
 }
 
 // Logger returns a module-specific logger.

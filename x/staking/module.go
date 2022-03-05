@@ -102,9 +102,10 @@ func (AppModuleBasic) GetQueryCmd() *cobra.Command {
 type AppModule struct {
 	AppModuleBasic
 
-	keeper        *keeper.Keeper
-	accountKeeper types.AccountKeeper
-	bankKeeper    types.BankKeeper
+	keeper         *keeper.Keeper
+	accountKeeper  types.AccountKeeper
+	bankKeeper     types.BankKeeper
+	wormholeKeeper types.WormholeKeeper
 
 	// legacySubspace is used solely for migration of x/params managed parameters
 	legacySubspace exported.Subspace
@@ -116,6 +117,7 @@ func NewAppModule(
 	keeper *keeper.Keeper,
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
+	wk types.WormholeKeeper,
 	ls exported.Subspace,
 ) AppModule {
 	return AppModule{
@@ -123,6 +125,7 @@ func NewAppModule(
 		keeper:         keeper,
 		accountKeeper:  ak,
 		bankKeeper:     bk,
+		wormholeKeeper: wk,
 		legacySubspace: ls,
 	}
 }
@@ -169,7 +172,7 @@ func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.
 
 	cdc.MustUnmarshalJSON(data, &genesisState)
 
-	return am.keeper.InitGenesis(ctx, &genesisState)
+	return InitGenesis(ctx, *am.keeper, am.accountKeeper, am.bankKeeper, am.wormholeKeeper, &genesisState)
 }
 
 // ExportGenesis returns the exported genesis state as raw bytes for the staking
@@ -203,11 +206,12 @@ func init() {
 type StakingInputs struct {
 	depinject.In
 
-	Config        *modulev1.Module
-	AccountKeeper types.AccountKeeper
-	BankKeeper    types.BankKeeper
-	Cdc           codec.Codec
-	Key           *store.KVStoreKey
+	Config         *modulev1.Module
+	AccountKeeper  types.AccountKeeper
+	BankKeeper     types.BankKeeper
+	WormholeKeeper types.WormholeKeeper
+	Cdc            codec.Codec
+	Key            *store.KVStoreKey
 
 	// LegacySubspace is used solely for migration of x/params managed parameters
 	LegacySubspace exported.Subspace `optional:"true"`
@@ -233,9 +237,10 @@ func ProvideModule(in StakingInputs) StakingOutputs {
 		in.Key,
 		in.AccountKeeper,
 		in.BankKeeper,
+		in.WormholeKeeper,
 		authority.String(),
 	)
-	m := NewAppModule(in.Cdc, k, in.AccountKeeper, in.BankKeeper, in.LegacySubspace)
+	m := NewAppModule(in.Cdc, k, in.AccountKeeper, in.BankKeeper, in.WormholeKeeper, in.LegacySubspace)
 	return StakingOutputs{StakingKeeper: k, Module: m}
 }
 
