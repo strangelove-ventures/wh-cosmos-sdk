@@ -26,7 +26,7 @@ type AccountKeeper interface {
 }
 
 type WormholeKeeper interface {
-	IsGuardian(ctx sdk.Context, addr sdk.ValAddress) bool
+	IsConsensusGuardian(ctx sdk.Context, addr sdk.ValAddress) (bool, error)
 }
 
 // BankKeeper defines the expected interface needed to retrieve account balances.
