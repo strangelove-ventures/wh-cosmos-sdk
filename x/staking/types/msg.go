@@ -120,6 +120,10 @@ func (msg MsgCreateValidator) ValidateBasic() error {
 		return err
 	}
 
+	if !msg.Value.Amount.GTE(msg.MinSelfDelegation) {
+		return ErrSelfDelegationBelowMinimum
+	}
+
 	return nil
 }
 
