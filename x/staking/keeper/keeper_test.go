@@ -56,6 +56,7 @@ func (s *KeeperTestSuite) SetupTest() {
 		key,
 		accountKeeper,
 		bankKeeper,
+		nil,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
 	keeper.SetParams(ctx, stakingtypes.DefaultParams())
