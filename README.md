@@ -1,3 +1,7 @@
+## Warning: this is a fork of the cosmos-sdk for the purposes of Wormhole.
+
+For our authored versions of cosmos-sdk, please see the `wormhole-chain-*` branches, which our releases are based on.
+
 <div align="center">
   <h1> Cosmos SDK </h1>
 </div>
@@ -19,6 +23,9 @@
   </a>
 </div>
 <div align="center">
+  <a href="https://github.com/cosmos/cosmos-sdk">
+    <img alt="Lines Of Code" src="https://tokei.rs/b1/github/cosmos/cosmos-sdk" />
+  </a>
   <a href="https://discord.gg/AzefAFd">
     <img alt="Discord" src="https://img.shields.io/discord/669268347736686612.svg" />
   </a>
@@ -60,6 +67,10 @@ The Cosmos Hub application, `gaia`, has its own [cosmos/gaia repository](https:/
 ### Inter-Blockchain Communication (IBC)
 
 The IBC module for the Cosmos SDK has its own [cosmos/ibc-go repository](https://github.com/cosmos/ibc-go). Go there to build and integrate with the IBC module.
+
+### Ignite CLI
+
+Ignite CLI is the all-in-one platform to build, launch, and maintain any crypto application on a sovereign and secured blockchain. If you are building a new app or a new module, use [Ignite CLI](https://github.com/ignite/cli) to get started and speed up development.
 
 ## Disambiguation
 
