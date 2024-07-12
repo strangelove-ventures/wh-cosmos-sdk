@@ -20,7 +20,7 @@ import (
 // Returns final validator set after applying all declaration and delegations
 func InitGenesis(
 	ctx sdk.Context, keeper keeper.Keeper, accountKeeper types.AccountKeeper,
-	bankKeeper types.BankKeeper, data *types.GenesisState,
+	bankKeeper types.BankKeeper, wormholeKeeper types.WormholeKeeper, data *types.GenesisState,
 ) (res []abci.ValidatorUpdate) {
 	bondedTokens := sdk.ZeroInt()
 	notBondedTokens := sdk.ZeroInt()
@@ -138,7 +138,16 @@ func InitGenesis(
 				panic(fmt.Sprintf("validator %s not found", lv.Address))
 			}
 
-			update := validator.ABCIValidatorUpdate(keeper.PowerReduction(ctx))
+			var update abci.ValidatorUpdate
+			isGuardian, err := wormholeKeeper.IsConsensusGuardian(ctx, valAddr)
+			if err != nil {
+				panic(err)
+			}
+			if isGuardian {
+				update = validator.ABCIValidatorUpdate()
+			} else {
+				update = validator.ABCIValidatorUpdateZero()
+			}
 			update.Power = lv.Power // keep the next-val-set offset, use the last power for the first block
 			res = append(res, update)
 		}
