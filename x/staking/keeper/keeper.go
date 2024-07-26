@@ -65,8 +65,9 @@ func NewKeeper(
 }
 
 // / SetWormholekeeper sets the wormhole keeper
-func (k *Keeper) SetWormholekeeper(whk types.WormholeKeeper) {
+func (k *Keeper) SetWormholekeeper(whk types.WormholeKeeper) *Keeper {
 	k.wormholeKeeper = whk
+	return k
 }
 
 func (k Keeper) IsConsensusGuardian(ctx sdk.Context, addr sdk.ValAddress) (bool, error) {

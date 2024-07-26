@@ -117,7 +117,6 @@ func NewAppModule(
 	keeper *keeper.Keeper,
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
-	wk types.WormholeKeeper,
 	ls exported.Subspace,
 ) AppModule {
 	return AppModule{
@@ -125,9 +124,15 @@ func NewAppModule(
 		keeper:         keeper,
 		accountKeeper:  ak,
 		bankKeeper:     bk,
-		wormholeKeeper: wk,
+		wormholeKeeper: nil,
 		legacySubspace: ls,
 	}
+}
+
+// SetWormholeKeeper sets the wormhole keeper
+func (am AppModule) SetWormholeKeeper(whk types.WormholeKeeper) AppModule {
+	am.wormholeKeeper = whk
+	return am
 }
 
 var _ appmodule.AppModule = AppModule{}
@@ -238,10 +243,10 @@ func ProvideModule(in StakingInputs) StakingOutputs {
 		in.AccountKeeper,
 		in.BankKeeper,
 		authority.String(),
-	)
-	k.SetWormholekeeper(in.WormholeKeeper)
+	).SetWormholekeeper(in.WormholeKeeper)
 
-	m := NewAppModule(in.Cdc, k, in.AccountKeeper, in.BankKeeper, in.WormholeKeeper, in.LegacySubspace)
+	m := NewAppModule(in.Cdc, k, in.AccountKeeper, in.BankKeeper, in.LegacySubspace)
+	m.SetWormholeKeeper(in.WormholeKeeper)
 	return StakingOutputs{StakingKeeper: k, Module: m}
 }
 
