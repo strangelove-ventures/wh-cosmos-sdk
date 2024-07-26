@@ -237,9 +237,10 @@ func ProvideModule(in StakingInputs) StakingOutputs {
 		in.Key,
 		in.AccountKeeper,
 		in.BankKeeper,
-		in.WormholeKeeper,
 		authority.String(),
 	)
+	k.SetWormholekeeper(in.WormholeKeeper)
+
 	m := NewAppModule(in.Cdc, k, in.AccountKeeper, in.BankKeeper, in.WormholeKeeper, in.LegacySubspace)
 	return StakingOutputs{StakingKeeper: k, Module: m}
 }

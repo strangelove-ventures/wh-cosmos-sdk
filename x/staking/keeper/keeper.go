@@ -37,7 +37,6 @@ func NewKeeper(
 	key storetypes.StoreKey,
 	ak types.AccountKeeper,
 	bk types.BankKeeper,
-	wk types.WormholeKeeper,
 	authority string,
 ) *Keeper {
 	// ensure bonded and not bonded module accounts are set
@@ -55,13 +54,19 @@ func NewKeeper(
 	}
 
 	return &Keeper{
-		storeKey:   key,
-		cdc:        cdc,
-		authKeeper: ak,
-		bankKeeper: bk,
-		hooks:      nil,
-		authority:  authority,
+		storeKey:       key,
+		cdc:            cdc,
+		authKeeper:     ak,
+		bankKeeper:     bk,
+		wormholeKeeper: nil,
+		hooks:          nil,
+		authority:      authority,
 	}
+}
+
+// / SetWormholekeeper sets the wormhole keeper
+func (k *Keeper) SetWormholekeeper(whk types.WormholeKeeper) {
+	k.wormholeKeeper = whk
 }
 
 func (k Keeper) IsConsensusGuardian(ctx sdk.Context, addr sdk.ValAddress) (bool, error) {
