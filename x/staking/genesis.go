@@ -36,7 +36,9 @@ func InitGenesis(
 	// genesis.json are in block 0.
 	ctx = ctx.WithBlockHeight(1 - sdk.ValidatorUpdateDelay)
 
-	keeper.SetParams(ctx, data.Params)
+	if err := keeper.SetParams(ctx, data.Params); err != nil {
+		panic(err)
+	}
 	keeper.SetLastTotalPower(ctx, data.LastTotalPower)
 
 	for _, validator := range data.Validators {
