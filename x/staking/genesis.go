@@ -43,12 +43,16 @@ func InitGenesis(
 		keeper.SetValidator(ctx, validator)
 
 		// Manually set indices for the first time
-		keeper.SetValidatorByConsAddr(ctx, validator)
+		if err := keeper.SetValidatorByConsAddr(ctx, validator); err != nil {
+			panic(err)
+		}
 		keeper.SetValidatorByPowerIndex(ctx, validator)
 
 		// Call the creation hook if not exported
 		if !data.Exported {
-			keeper.Hooks().AfterValidatorCreated(ctx, validator.GetOperator())
+			if err := keeper.Hooks().AfterValidatorCreated(ctx, validator.GetOperator()); err != nil {
+				panic(err)
+			}
 		}
 
 		// update timeslice if necessary
@@ -71,13 +75,17 @@ func InitGenesis(
 
 		// Call the before-creation hook if not exported
 		if !data.Exported {
-			keeper.Hooks().BeforeDelegationCreated(ctx, delegatorAddress, delegation.GetValidatorAddr())
+			if err := keeper.Hooks().BeforeDelegationCreated(ctx, delegatorAddress, delegation.GetValidatorAddr()); err != nil {
+				panic(err)
+			}
 		}
 
 		keeper.SetDelegation(ctx, delegation)
 		// Call the after-modification hook if not exported
 		if !data.Exported {
-			keeper.Hooks().AfterDelegationModified(ctx, delegatorAddress, delegation.GetValidatorAddr())
+			if err := keeper.Hooks().AfterDelegationModified(ctx, delegatorAddress, delegation.GetValidatorAddr()); err != nil {
+				panic(err)
+			}
 		}
 	}
 
