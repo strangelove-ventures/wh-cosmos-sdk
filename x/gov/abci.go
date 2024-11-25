@@ -18,6 +18,8 @@ func EndBlocker(ctx sdk.Context, keeper *keeper.Keeper) {
 
 	logger := keeper.Logger(ctx)
 
+	fmt.Println("joel - end blocker called")
+
 	// delete dead proposals from store and returns theirs deposits.
 	// A proposal is dead when it's inactive and didn't get enough deposit on time to get into voting phase.
 	keeper.IterateInactiveProposalsQueue(ctx, ctx.BlockHeader().Time, func(proposal v1.Proposal) bool {
@@ -54,6 +56,8 @@ func EndBlocker(ctx sdk.Context, keeper *keeper.Keeper) {
 	// fetch active proposals whose voting periods have ended (are passed the block time)
 	keeper.IterateActiveProposalsQueue(ctx, ctx.BlockHeader().Time, func(proposal v1.Proposal) bool {
 		var tagValue, logMsg string
+
+		fmt.Println("joel - tallying proposal")
 
 		passes, burnDeposits, tallyResults := keeper.Tally(ctx, proposal)
 
