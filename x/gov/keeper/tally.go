@@ -1,6 +1,8 @@
 package keeper
 
 import (
+	"fmt"
+
 	"cosmossdk.io/math"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	v1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
@@ -91,6 +93,11 @@ func (keeper Keeper) Tally(ctx sdk.Context, proposal v1.Proposal) (passes bool, 
 
 	params := keeper.GetParams(ctx)
 	tallyResults = v1.NewTallyResultFromMap(results)
+
+	fmt.Println("JOEL LOOK HERE")
+	fmt.Println("Total Voting Power", totalVotingPower)
+	fmt.Println("Tally Results", tallyResults)
+	fmt.Println("Total Bonded TOKENS", keeper.sk.TotalBondedTokens(ctx))
 
 	// TODO: Upgrade the spec to cover all of these cases & remove pseudocode.
 	// If there is no staked coins, the proposal fails
